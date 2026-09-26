@@ -1,0 +1,31 @@
+name: AgentOS CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: Run test suite
+        # No LLM endpoint in CI: the benchmark/regression tests run with the LLM
+        # disabled and the app degrades to heuristics, so the suite is fully
+        # deterministic and offline.
+        env:
+          FREELLM_API_KEY: ""
+        run: python -m pytest -q

@@ -1,0 +1,15 @@
+.git
+.github
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+web/node_modules
+web/dist
+*.duckdb
+*.duckdb.wal
+.env
+docs
+tests
+sandbox_workspace

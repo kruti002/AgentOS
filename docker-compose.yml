@@ -1,0 +1,23 @@
+services:
+  agentos:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # Point at a reachable OpenAI-compatible endpoint. When AgentOS runs in a
+      # container and the FreeLLMAPI router runs on the host, use
+      # host.docker.internal instead of localhost.
+      FREELLM_BASE_URL: ${FREELLM_BASE_URL:-http://host.docker.internal:31415/v1}
+      FREELLM_API_KEY: ${FREELLM_API_KEY:-}
+      AGENTOS_MODEL: ${AGENTOS_MODEL:-auto}
+      # API hardening (optional).
+      AGENTOS_AUTH_TOKEN: ${AGENTOS_AUTH_TOKEN:-}
+      AGENTOS_ALLOWED_ORIGINS: ${AGENTOS_ALLOWED_ORIGINS:-*}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Persist task history across container restarts.
+      - agentos-data:/app
+
+volumes:
+  agentos-data:
